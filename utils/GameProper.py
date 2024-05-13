@@ -1,3 +1,5 @@
+import random
+
 class DiceGame:
 	def __init__(self):
 		pass
