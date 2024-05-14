@@ -1,5 +1,5 @@
-from GameProper import *
-game = DiceGame
+from .GameProper import *
+game = DiceGame()
 
 class UserManager:
 	accounts = {}
@@ -15,19 +15,19 @@ class UserManager:
 		with open('users.txt', 'w') as f:
 			print(self.accounts, file=f)
 	
-	def validate_username(self):
-		if len(self) < 4:
+	def validate_username(self, username):
+		if len(username) < 4:
 			print("Username must be atleast 4 characters long.")
 			return False
 		else:
-			if self in self.accounts:
+			if username in self.accounts:
 				print("Username already exists.")
 				return False
 			else:
 				return True
 			
-	def validate_password(self):
-		if len(self) < 8:
+	def validate_password(self, password):
+		if len(password) < 8:
 			print("Password must be atleast 8 characters long.")
 			return False
 		else:
@@ -43,16 +43,15 @@ class UserManager:
 				return self.register(username)
 			else:
 				self.validate_password(password)
-		else:
-			print("Registration Successful.")
-			self.accounts[username] = User(username, password)
-			self.login(username)
+				print("Registration Successful.")
+				self.accounts[username] = User(username, password)
+				game.menu(username)
 		
 	def login(self):
 		username = input("Enter username, or leave blank to cancel: ")
 		if username in self.accounts:
 			password = input("Enter password, or leave blank to cancel: ")
-			if password == self.accounts[username]["password"]:
+			if password == self.accounts[username].password:
 				game.menu(username)
 			else:
 				pass
@@ -61,7 +60,7 @@ class UserManager:
 	
 	def ScorePrint(self):
 		with open('rankings.txt', 'r') as f:
-			print(f"{self.accounts["username"]}: {self.accounts["points"]} points.")
+			print(f"{self.accounts['username']}: {self.accounts['points']} points.")
 
 	def PrintHighScore(self):
 		scores = self.accounts
