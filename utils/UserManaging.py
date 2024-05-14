@@ -1,5 +1,5 @@
 from GameProper import *
-game = DiceGame()
+game = DiceGame
 
 class UserManager:
 	accounts = {}
@@ -25,8 +25,7 @@ class UserManager:
 				return False
 			else:
 				return True
-
-
+			
 	def validate_password(self):
 		if len(self) < 8:
 			print("Password must be atleast 8 characters long.")
@@ -39,7 +38,6 @@ class UserManager:
 		if username == "":
 			return
 		elif self.validate_username(username):
-			
 			password = input("Enter password (at least 8 characters), or leave blank to cancel: ")
 			if password == "":
 				return self.register(username)
@@ -47,7 +45,7 @@ class UserManager:
 				self.validate_password(password)
 		else:
 			print("Registration Successful.")
-			self.accounts[username] = {"username": username, "password": password, "points": 0, "wins": 0}
+			self.accounts[username] = User(username, password)
 			self.login(username)
 		
 	def login(self):
@@ -56,3 +54,20 @@ class UserManager:
 			password = input("Enter password, or leave blank to cancel: ")
 			if password == self.accounts[username]["password"]:
 				game.menu(username)
+			else:
+				pass
+		else:
+			pass
+	
+	def ScorePrint(self):
+		with open('rankings.txt', 'r') as f:
+			print(f"{self.accounts["username"]}: {self.accounts["points"]} points.")
+
+	def PrintHighScore(self):
+		scores = self.accounts
+		with open('rankings.txt', 'r') as f:
+			SortedScore = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
+			count = 1
+			for key, value in SortedScore.items():
+				print(f"{count}. {key}: {value} points\n")
+				count += 1
