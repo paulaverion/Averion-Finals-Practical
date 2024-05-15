@@ -5,13 +5,13 @@ wins = 0
 
 class DiceGame:
 	def __init__(self):
-		pass
+		self.score_manager = Score()
 
 	def load_scores(self):
-		pass
+		self.score_manager.load_score()
 
 	def save_scores(self):
-		pass
+		self.score_manager.save_score()
 
 	def play_game(self, username):
 		while True:
@@ -25,12 +25,13 @@ class DiceGame:
 				self.menu(username)
 
 	def show_top_scores(self):
-		pass
+		self.score_manager.PrintHighScore()
 
 	def logout(self):
-		pass
+		return
 
 	def menu(self, username):
+		self.load_scores()
 		print(f"Welcome, {username}!")
 		print("""
 	Menu: 
@@ -46,7 +47,7 @@ class DiceGame:
 			elif choice == 2:
 				DiceGame.show_top_scores()
 			elif choice == 3:
-				return
+				DiceGame.logout()
 			else:
 				return
 		except ValueError:

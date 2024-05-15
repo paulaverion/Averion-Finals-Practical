@@ -7,13 +7,18 @@ class UserManager:
 	def load_users(self):
 		try:
 			with open('users.txt', 'r') as f:
-				self.accounts = eval(f.read())
+				for line in f:
+					user = line.strip().split(",")
+					self.accounts[user[0]] = User(user[0], user[1])
 		except FileNotFoundError:
-			self.accounts = {}
+			print("User file not found.")
+		except Exception as e:
+			print(f"Error loading users: {e}")
 
 	def save_users(self):
 		with open('users.txt', 'w') as f:
-			print(self.accounts, file=f)
+			for username, password in self.accounts.items():
+				f.write(f"{username},{password}\n")
 	
 	def validate_username(self, username):
 		if len(username) < 4:
@@ -54,19 +59,8 @@ class UserManager:
 			if password == self.accounts[username].password:
 				game.menu(username)
 			else:
-				pass
+				print("Incorrect password.")
+				self.login()
 		else:
-			pass
-	
-	def ScorePrint(self):
-		with open('rankings.txt', 'r') as f:
-			print(f"{self.accounts['username']}: {self.accounts['points']} points.")
-
-	def PrintHighScore(self):
-		scores = self.accounts
-		with open('rankings.txt', 'r') as f:
-			SortedScore = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
-			count = 1
-			for key, value in SortedScore.items():
-				print(f"{count}. {key}: {value} points\n")
-				count += 1
+			print("Username does not exist.")
+			self.login()
