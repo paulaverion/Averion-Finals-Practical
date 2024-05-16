@@ -15,8 +15,12 @@ def main():
         if choice == 1:
             user.register()
             main()
-        if choice == 2:
+        elif choice == 2:
             user.login()
-    
+        elif choice == 3:
+            break
+        else:
+            print("Invalid choice. Please choose a valid option.")
+
 if __name__ == "__main__":
     main()

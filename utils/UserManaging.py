@@ -5,15 +5,10 @@ class UserManager:
 	accounts = {}
 	
 	def load_users(self):
-		try:
-			with open('users.txt', 'r') as f:
-				for line in f:
-					user = line.strip().split(",")
-					self.accounts[user[0]] = User(user[0], user[1])
-		except FileNotFoundError:
-			print("User file not found.")
-		except Exception as e:
-			print(f"Error loading users: {e}")
+		with open('users.txt', 'r') as f:
+			for line in f:
+				user = line.strip().split(",")
+				self.accounts[user[0]] = User(user[0], user[1])
 
 	def save_users(self):
 		with open('users.txt', 'w') as f:
