@@ -17,8 +17,8 @@ class UserManager:
 
 	def save_users(self):
 		with open('users.txt', 'w') as f:
-			for username, password in self.accounts.items():
-				f.write(f"{username},{password}\n")
+			for username, user in self.accounts.items():
+				f.write(f"{username},{user.password}\n")
 	
 	def validate_username(self, username):
 		if len(username) < 4:
@@ -45,11 +45,12 @@ class UserManager:
 		elif self.validate_username(username):
 			password = input("Enter password (at least 8 characters), or leave blank to cancel: ")
 			if password == "":
-				return self.register(username)
+				return
 			else:
 				self.validate_password(password)
 				print("Registration Successful.")
 				self.accounts[username] = User(username, password)
+				self.save_users()
 				game.menu(username)
 		
 	def login(self):
@@ -63,4 +64,4 @@ class UserManager:
 				self.login()
 		else:
 			print("Username does not exist.")
-			self.login()
+			return

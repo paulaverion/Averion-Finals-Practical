@@ -1,57 +1,63 @@
 import random
 from .ScoreManager import *
-points = 0
-wins = 0
+scores = []
 
 class DiceGame:
-	def __init__(self):
-		self.score_manager = Score()
-
+	points = 0
+	wins = 0
 	def load_scores(self):
-		self.score_manager.load_score()
+		pass
 
 	def save_scores(self):
-		self.score_manager.save_score()
+		with open('data.txt', 'w') as f:
+			for i in range(len(scores)):
+				f.write(f"{scores[i].username.score.wins.game_ID}\n")
 
 	def play_game(self, username):
 		while True:
 			if self.rolls(username) == True:
-				choice = input("Do you want to continue to the next stage? (1 for Yes, 0 for No): ")
+				self.save_scores()
+				choice = int(input("Do you want to continue to the next stage? (1 for Yes, 0 for No): "))
 				if choice == 1:
 					continue
 				elif choice == 0:
-					break
+					return
+				else:
+					print("Invalid choice. Please enter 1 or 0.")
 			else:
-				self.menu(username)
+				return
 
 	def show_top_scores(self):
-		self.score_manager.PrintHighScore()
-
-	def logout(self):
-		return
+		scores = self.accounts
+		with open('rankings.txt', 'r') as f:
+			SortedScore = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
+			count = 1
+			for key, value in SortedScore.items():
+				print(f"{count}. {key}: {value} points\n")
+				count += 1
 
 	def menu(self, username):
 		self.load_scores()
-		print(f"Welcome, {username}!")
-		print("""
-	Menu: 
-		1. Start Game
-		2. Show Top Scores
-		3. Log Out
-			""")
-		choice = int(input("Enter your choice, or leave blank to cancel: "))
-		try:
-			if choice == 1:
+		while True:	
+			print(f"Welcome, {username}!")
+			print("""
+		Menu: 
+			1. Start Game
+			2. Show Top Scores
+			3. Log Out
+				""")
+			choice = input("Enter your choice, or leave blank to cancel: ")
+			if choice == '1':
 				print(f"Starting game as {username}...\n")
 				self.play_game(username)
-			elif choice == 2:
-				DiceGame.show_top_scores()
-			elif choice == 3:
-				DiceGame.logout()
-			else:
+			elif choice == '2':
+				self.show_top_scores()
+			elif choice == '3':
 				return
-		except ValueError:
-				print("Invalid choice.")
+			elif choice == "":
+				continue
+			else:
+				print("Invalid choice. Please enter 1, 2, or 3.")
 
 	def rolls(self, username):
 			global points
@@ -66,7 +72,7 @@ class DiceGame:
 				if RollUser > RollCPU:
 					print(f"You win this round! {username}")
 					RoundWin += 1
-					points += 1
+					self.points += 1
 				elif RollCPU > RollUser:
 					print(f"CPU wins this round!")
 					RoundLose += 1
@@ -75,14 +81,69 @@ class DiceGame:
 			else:
 				if RoundWin == 2:
 						print(f"You won this stage {username}!\n")
-						points += 3
-						wins += 1
+						self.points += 3
+						self.wins += 1
 						print(f"""{username}
-	Total points: {points}, Stages Won: {wins}""")
-						print(f"Game over. You won {wins} stage(s) with a total of {points} points.")
+Total points: {self.points}, Stages Won: {self.wins}""")
+						print(f"Game over. You won {self.wins} stage(s) with a total of {self.points} points.")
+						scores.append(Score(username, self.points, self.wins, 5 ))
 						return True
 				elif RoundLose == 2:
 						print(f"You lost this stage {username}.\n")
-						print("Game over. You didn't win any stages.")
-						return False
-			
+						self.save_scores()
+						if self.wins == 0:
+							print("Game over. You didn't win any stages.")
+							scores.append(Score({username}, self.points, self.wins, 5 ))
+							return False
+						elif self.wins >= 1:
+							scores.append(Score({username}, self.points, self.wins, 5 ))
+							print(f"Game over. You won {self.wins} stage(s).")
+							return False
+
+
+"""
+	def __init__(self, filename='scores.txt'):
+		self.filename = filename
+		self.scores = {}
+
+	def load_score(self):
+		
+
+	def save_score(self):
+		with open(self.filename, 'w') as f:
+			for username, score in self.scores.items():
+				f.write(f"{username},{score}\n")
+
+	def add_score(self, username, score):
+		if username in self.scores:
+			self.scores[username] += score
+		else:
+			self.scores[username] = score
+		self.save_scores()
+
+	def add_wins(self, username, wins):
+		if username in self.scores:
+			self.scores[username] += wins
+		else:
+			self.scores[username] = wins
+		self.save_scores()
+		
+	def get_score(self, username):
+		return self.scores.get(username, 0)
+	
+	def get_wins(self, username):
+		return self.scores.get(username, 0)
+	
+	def ScorePrint(self):
+		with open('rankings.txt', 'r') as f:
+			print(f"{self.accounts['username']}: {self.accounts['points']} points.")
+
+	def PrintHighScore(self):
+		scores = self.accounts
+		with open('rankings.txt', 'r') as f:
+			SortedScore = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
+			count = 1
+			for key, value in SortedScore.items():
+				print(f"{count}. {key}: {value} points\n")
+				count += 1
+"""
