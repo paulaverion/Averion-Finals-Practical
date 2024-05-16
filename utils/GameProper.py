@@ -11,16 +11,16 @@ class DiceGame:
 	def save_scores(self):
 		with open('data.txt', 'w') as f:
 			for i in range(len(scores)):
-				f.write(f"{scores[i].username.score.wins.game_ID}\n")
+				f.write(f"{scores[i].username}, {scores[i].score}, {scores[i].wins}, {scores[i].game_ID}\n")
 
 	def play_game(self, username):
 		while True:
 			if self.rolls(username) == True:
-				self.save_scores()
 				choice = int(input("Do you want to continue to the next stage? (1 for Yes, 0 for No): "))
 				if choice == 1:
 					continue
 				elif choice == 0:
+					self.save_scores()
 					return
 				else:
 					print("Invalid choice. Please enter 1 or 0.")
@@ -28,13 +28,7 @@ class DiceGame:
 				return
 
 	def show_top_scores(self):
-		scores = self.accounts
-		with open('rankings.txt', 'r') as f:
-			SortedScore = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
-			count = 1
-			for key, value in SortedScore.items():
-				print(f"{count}. {key}: {value} points\n")
-				count += 1
+		pass
 
 	def menu(self, username):
 		self.load_scores()
@@ -90,7 +84,6 @@ Total points: {self.points}, Stages Won: {self.wins}""")
 						return True
 				elif RoundLose == 2:
 						print(f"You lost this stage {username}.\n")
-						self.save_scores()
 						if self.wins == 0:
 							print("Game over. You didn't win any stages.")
 							scores.append(Score({username}, self.points, self.wins, 5 ))
@@ -98,6 +91,7 @@ Total points: {self.points}, Stages Won: {self.wins}""")
 						elif self.wins >= 1:
 							scores.append(Score({username}, self.points, self.wins, 5 ))
 							print(f"Game over. You won {self.wins} stage(s).")
+							self.save_scores()
 							return False
 
 
