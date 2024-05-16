@@ -1,17 +1,30 @@
+import os
 import random
 from .ScoreManager import *
 scores = []
 
 class DiceGame:
+	
 	points = 0
 	wins = 0
 	def load_scores(self):
-		pass
+		if not os.path.exists("data.txt"):
+			with open('data.txt', 'w') as f:
+				f.write("")
+		else:
+			with open('data.txt', 'r') as f:
+				for line in f:
+					values = line.strip().split(',')
+					username = values[0]
+					points = values[1]
+					wins = values[2]
+					game_ID = values[3]
+					scores.append({username:Score(username, points, wins, game_ID)})
 
 	def save_scores(self):
 		with open('data.txt', 'w') as f:
 			for i in range(len(scores)):
-				f.write(f"{scores[i].username}, {scores[i].score}, {scores[i].wins}, {scores[i].game_ID}\n")
+				f.write(f"{scores[i].username}, {scores[i].points}, {scores[i].wins}, {scores[i].game_ID}\n")
 
 	def play_game(self, username):
 		while True:
@@ -20,6 +33,8 @@ class DiceGame:
 				if choice == 1:
 					continue
 				elif choice == 0:
+					game_ID = datetime.datetime.now().strftime("%Y%m%d%H%M")
+					scores.append(Score(username, self.points, self.wins, game_ID))
 					self.save_scores()
 					self.points = 0
 					self.win = 0
@@ -30,18 +45,23 @@ class DiceGame:
 				return
 
 	def show_top_scores(self):
-		pass
+		print("RANKING\n")
+		for i in range(len(self.scores)):
+			if i > 9: break
+			name = list(self.scores[i].keys())[0]
+			score = self.scores[i][name].score
+			wins = self.scores[i][name].streak
+			
+			print(f"{i+1}. {name}    Score: {score}    Wins: {wins}")
 
 	def menu(self, username):
 		self.load_scores()
 		while True:	
-			print(f"Welcome, {username}!")
-			print("""
-		Menu: 
-			1. Start Game
-			2. Show Top Scores
-			3. Log Out
-				""")
+			print(f"\nWelcome, {username}!")
+			print("Menu")
+			print("1. Start Game")
+			print("2. Show Top Scores")
+			print("3. Log Out\n")
 			choice = input("Enter your choice, or leave blank to cancel: ")
 			if choice == '1':
 				print(f"Starting game as {username}...\n")
@@ -89,8 +109,9 @@ Total points: {self.points}, Stages Won: {self.wins}""")
 							print("Game over. You didn't win any stages.")
 							return False
 						elif self.wins >= 1:
-							scores.append(Score(username, self.points, self.wins, 5 ))
 							print(f"Game over. You won {self.wins} stage(s).")
+							game_ID = datetime.datetime.now().strftime("%Y%m%d%H%M")
+							scores.append(Score(username, self.points, self.wins, game_ID ))
 							self.save_scores()
 							self.points = 0
 							self.wins = 0

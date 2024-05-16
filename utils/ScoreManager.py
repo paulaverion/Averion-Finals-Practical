@@ -1,7 +1,7 @@
 from .Users import *
 class Score:
-	def __init__(self, username, score, wins, game_ID):
+	def __init__(self, username, points, wins, game_ID):
 		self.username = username
-		self.score = score
+		self.score = points
 		self.wins = wins
 		self.game_ID = game_ID

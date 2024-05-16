@@ -5,12 +5,12 @@ user = UserManaging.UserManager()
 
 def main():
     while True:
+        game.load_scores()
         user.load_users()
-        print("""Welcome to Dice Roll Game
-            1. Register
-            2. Login
-            3. Exit
-            """)
+        print("Welcome to Dice Roll Game\n")
+        print("1. Register")
+        print("2. Login")
+        print("3. Exit")
         choice = int(input("Action: "))
         if choice == 1:
             user.register()
