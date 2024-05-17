@@ -47,7 +47,7 @@ class DiceGame:
 	def show_top_scores(self):
 		print("RANKING\n")
 		
-		sorted_scores = sorted(scores, key=lambda x: (x.points, x.wins))
+		sorted_scores = sorted(scores, key = lambda x: (x.points, x.wins), reverse = True)
 		for i in range(len(sorted_scores)):
 			if i > 9: break
 			name = sorted_scores[i].username
