@@ -49,8 +49,8 @@ class DiceGame:
 		for i in range(len(self.scores)):
 			if i > 9: break
 			name = list(self.scores[i].keys())[0]
-			score = self.scores[i][name].score
-			wins = self.scores[i][name].streak
+			score = scores[i][name].points
+			wins = scores[i][name].wins
 			
 			print(f"{i+1}. {name}    Score: {score}    Wins: {wins}")
 
