@@ -47,14 +47,15 @@ class DiceGame:
 	def show_top_scores(self):
 		print("RANKING\n")
 		
-		sorted_scores = sorted(scores, key = lambda x: (x.points, x.wins), reverse = True)
+		sorted_scores = sorted(scores, key=lambda x: (int(x.points), int(x.wins), x.username), reverse=True)
 		for i in range(len(sorted_scores)):
-			if i > 9: break
-			name = sorted_scores[i].username
-			score = sorted_scores[i].points
-			wins = sorted_scores[i].wins
-			
-			print(f"{i+1}. {name}    Score: {score}    Wins: {wins}")
+				if i > 9: 
+					break
+				name = sorted_scores[i].username
+				points = sorted_scores[i].points
+				wins = sorted_scores[i].wins
+				
+				print(f"{i+1}. {name}, Score: {points}, Wins: {wins}")
 
 	def menu(self, username):
 		while True:	
