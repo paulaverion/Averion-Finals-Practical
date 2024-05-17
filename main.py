@@ -18,7 +18,7 @@ def main():
         elif choice == 2:
             user.login()
         elif choice == 3:
-            break
+            return 0
         else:
             print("Invalid choice. Please choose a valid option.")
 

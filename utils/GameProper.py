@@ -19,7 +19,7 @@ class DiceGame:
 					points = values[1]
 					wins = values[2]
 					game_ID = values[3]
-					scores.append({username:Score(username, points, wins, game_ID)})
+					scores.append(Score(username, points, wins, game_ID))
 
 	def save_scores(self):
 		with open('data.txt', 'w') as f:
@@ -33,7 +33,7 @@ class DiceGame:
 				if choice == 1:
 					continue
 				elif choice == 0:
-					game_ID = datetime.datetime.now().strftime("%Y%m%d%H%M")
+					game_ID = {username}, datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 					scores.append(Score(username, self.points, self.wins, game_ID))
 					self.save_scores()
 					self.points = 0
@@ -46,16 +46,17 @@ class DiceGame:
 
 	def show_top_scores(self):
 		print("RANKING\n")
-		for i in range(len(self.scores)):
+		
+		sorted_scores = sorted(scores, key=lambda x: (x.points, x.wins))
+		for i in range(len(sorted_scores)):
 			if i > 9: break
-			name = list(self.scores[i].keys())[0]
-			score = scores[i][name].points
-			wins = scores[i][name].wins
+			name = sorted_scores[i].username
+			score = sorted_scores[i].points
+			wins = sorted_scores[i].wins
 			
 			print(f"{i+1}. {name}    Score: {score}    Wins: {wins}")
 
 	def menu(self, username):
-		self.load_scores()
 		while True:	
 			print(f"\nWelcome, {username}!")
 			print("Menu")
